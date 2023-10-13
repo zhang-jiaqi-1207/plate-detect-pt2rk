@@ -7,12 +7,13 @@ from rknn.api import RKNN
 from plate_recognition.plate_rec import init_model, cv_imread
 from utils.post_process import detect_Recognition_plate, detect_Recognition_plate_onnx, detect_Recognition_plate_rknn, draw_result, load_model
 
-ONNX_MODEL = './weights/plate_detect.onnx'
-RKNN_MODEL = 'plate_detect.rknn'
-IMG_PATH = './imgs/single_blue.jpg'
-DATASET = './dataset.txt'
 
-QUANTIZE_ON = False
+# RKNN模型参数设定
+ONNX_MODEL = './weights/plate_detect.onnx'      # onnx文件路径，rknn.load_onnx()调用需要
+RKNN_MODEL = 'plate_detect.rknn'                # rknn导出路径位置
+IMG_PATH = './imgs/single_blue.jpg'             # 选择测试的图片
+QUANTIZE_ON = False                             # 是否进行量化。
+DATASET = './dataset.txt'                       # 在选择量化的前提下，进行量化的图片
 
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -74,19 +75,18 @@ if __name__ == '__main__':
         img = cv2.cvtColor(img, cv2.COLOR_BGRA2BGR)
 
     # (2) 通过pt, onnx, rknn文件检测车牌，并识别别车牌
-    # dict_list_torch = detect_Recognition_plate(detect_model,
-    #                                            img,
-    #                                            device,
-    #                                            plate_rec_model,
-    #                                            img_size = 640,
-    #                                            is_color = True)
-    # dict_list_onnx = detect_Recognition_plate_onnx(onnx_path,
-    #                                             img,
-    #                                             device,
-    #                                             plate_rec_model,
-    #                                             img_size = 640,
-    #                                             is_color = True)
-    
+    dict_list_torch = detect_Recognition_plate(detect_model,
+                                               img,
+                                               device,
+                                               plate_rec_model,
+                                               img_size = 640,
+                                               is_color = True)
+    dict_list_onnx = detect_Recognition_plate_onnx(onnx_path,
+                                                img,
+                                                device,
+                                                plate_rec_model,
+                                                img_size = 640,
+                                                is_color = True) 
     dict_list_rknn = detect_Recognition_plate_rknn(rknn,
                                                 img,
                                                 device,

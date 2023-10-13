@@ -18,11 +18,11 @@
     - `plate_rec_color.pth`为车牌识别网络的权重文件，主要针对前一阶段检测出的车牌区域进行识别，获取车牌信息。
     - 本项目便是尝试将`plate_detect.pt`转换为`rknn`格式进行部署。
 
-- `preds/`文件夹下保存有推理结果数据文件，以`npy`文件保存。
+- `checks/`中`check_preds.py`主要是获得`onnx`推理结果与`rknn`推理结果的余弦相似度。
 
-- `checks/`中`check_preds.py`主要是针对`preds/`文件夹下的推理结果数据文件进行处理，获得`onnx`推理结果与`rknn`推理结果的余弦相似度。
+- `figure/`中为`README.md`文件所需要的资源文件。
 
-- `results/`中保存有`onnx`以及`rknn`的识别结果。
+- 结果存放目录`preds/`以及`results/`未给出，可以在执行代码前在当前路径下新建。
 
 ## 运行说明
 
@@ -31,3 +31,17 @@
 - 如果想将`plate_detect.pt`转换成`plate_detect.onnx`文件，可以通过执行`python3 export.py --weights ./weights/plate-detect.pt`命令完成转换。转换的结果保存于`weights/`下。
 
 - 如果想获得推理结果的相对误差以及余弦相似度，可以执行`python3 checks/check_preds.py`
+
+## 运行结果
+
+- 运行环境
+    - PC端：WSL on Windows 10 (Linux发行版为`Ubuntu 22.04`)
+    - rknn所需要的python环境：参见[rknn-toolkit2](https://github.com/rockchip-linux/rknn-toolkit2)相关文件说明。
+
+- 执行`rknn`转换代码，并进行仿真器推理。
+
+![执行截图](./figures/output-single_blue.png)
+
+- 识别结果展示 (原图，pytorch，onnx以及rknn)
+
+![识别结果](./figures/img-single_blue.png)
