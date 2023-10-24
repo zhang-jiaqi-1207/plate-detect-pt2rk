@@ -265,8 +265,8 @@ def detect_Recognition_plate_rknn(model: RKNN, orgimg, device,plate_rec_model,im
 
     img = cv2.resize(img, (640, 512))
     # Convert
-    # img = img[:, :, ::-1].copy()  # BGR to RGB, 图片的BGR排列转为RGB,然后图片为H,W,C排列
-    img = img[:, :, ::-1].transpose(2, 0, 1).copy()  # BGR to RGB, 图片的BGR排列转为RGB,然后将图片的H,W,C排列变为C,H,W排列
+    img = img[:, :, ::-1].copy()  # BGR to RGB, 图片的BGR排列转为RGB,然后图片为H,W,C排列
+    # img = img[:, :, ::-1].transpose(2, 0, 1).copy()  # BGR to RGB, 图片的BGR排列转为RGB,然后将图片的H,W,C排列变为C,H,W排列
 
     # Run inference
     img = img.astype(np.float16)
@@ -277,11 +277,12 @@ def detect_Recognition_plate_rknn(model: RKNN, orgimg, device,plate_rec_model,im
     # Inference
     # pred = model(img)[0]
     pred = model.inference(inputs=[img],
-                        #    data_format=["nhwc"],
-                           data_format=["nchw"])[0]
+                           data_format=["nhwc"])[0]
     pred = torch.from_numpy(pred).to("cuda")
 
     np.save("preds/rknn_pred.npy", pred.cpu().numpy())
+
+    img = img.transpose(0, 3, 1, 2)
     
     # Apply NMS
     pred = non_max_suppression_face(pred, conf_thres, iou_thres)
