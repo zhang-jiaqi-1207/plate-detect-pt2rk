@@ -3,6 +3,8 @@
 /results
 /__pycache__/
 /*/__pycache__/
+/snapshot
 
 # Ignore the followed files
 ./checks/*.txt
+debug*.*
