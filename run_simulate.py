@@ -63,13 +63,13 @@ if __name__ == '__main__':
         exit(ret)
     print('done')
 
-    # Export RKNN model
-    print('--> Export rknn model')
-    ret = rknn.export_rknn(RKNN_MODEL)
-    if ret != 0:
-        print('Export rknn model failed!')
-        exit(ret)
-    print('done')
+    # # Export RKNN model
+    # print('--> Export rknn model')
+    # ret = rknn.export_rknn(RKNN_MODEL)
+    # if ret != 0:
+    #     print('Export rknn model failed!')
+    #     exit(ret)
+    # print('done')
 
     # Init runtime environment
     print('--> Init runtime environment')

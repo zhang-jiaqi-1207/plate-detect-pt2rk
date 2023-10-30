@@ -8,3 +8,4 @@
 # Ignore the followed files
 ./checks/*.txt
 debug*.*
+plate_detect*.*

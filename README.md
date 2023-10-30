@@ -26,11 +26,18 @@
 
 ## 运行说明
 
-- 在正确安装rknn-toolkit2之后，便可以通过`python3 simulation.py`命令将`onnx`文件转成`rknn`文件。同时在PC端调用仿真器进行模拟推理，推理结果也会以`npy`文件格式保存于`preds/`目录下。
+- 在正确安装rknn-toolkit2之后，便可以通过`python3 run_simulate.py`命令相关任务。
+    - 应当注意`QUANTIZE_ON`参数值，以确定`RKNN`模型是`fp16`数据格式或者是`asymmetric-int8`格式。
+
+    - 在`inference`部分，给出了对比`.pt`，`.onnx`以及`.rknn`推理结果的代码，可根据需要进行注释或取消注释。
+
+    - 如果`export_rknn()`未被注释，则会将构建的`RKNN`模型导出并保存于`.rknn`文件之中。`.rknn`文件路径可以通过函数的输入参数指定。
+
+    - 如果`accuracy_analysis()`未被注释，则会对量化结果进行分析，并将结果快照信息输出于`snapshot/`文件中。
 
 - 如果想将`plate_detect.pt`转换成`plate_detect.onnx`文件，可以通过执行`python3 export.py --weights ./weights/plate-detect.pt`命令完成转换。转换的结果保存于`weights/`下。
 
-- 如果想获得推理结果的相对误差以及余弦相似度，可以执行`python3 checks/check_preds.py`
+- 如果想获得推理结果的余弦相似度，可以执行`python3 checks/check_preds.py`
 
 ## 运行结果
 
