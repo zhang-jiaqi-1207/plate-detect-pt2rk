@@ -12,8 +12,6 @@ from utils.post_process import detect_Recognition_plate, detect_Recognition_plat
 ONNX_MODEL = './weights/plate_detect.onnx'                # onnx文件路径，rknn.load_onnx()调用需要
 RKNN_MODEL = './weights/plate_detect.rknn'                # rknn导出路径位置
 IMG_PATH = '/mnt/c/Users/jxb/MyFiles/车牌/地库/苏F188W6.jpg'             # 选择测试的图片
-QUANTIZE_ON = False                            # 是否进行量化。
-DATASET = './dataset.txt'                       # 在选择量化的前提下，进行量化校准的图片
 
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -27,38 +25,20 @@ if __name__ == '__main__':
     # Create RKNN object
     rknn = RKNN(verbose=False)
 
-    # pre-process config
-    print('--> Config model')
-    rknn.config(
-        mean_values = [[114.57069762499403, 112.06498372297212, 112.0936524574251]],
-        std_values = [[56.552368489533805, 59.74804638037939, 59.92431607351682]],
-        quantized_dtype = "asymmetric_quantized-8",
-        quantized_algorithm = 'normal',
-        quantized_method = 'channel',
-        optimization_level = 2,
-        target_platform = "rk3588")
-    print('done')
-
-    # Load ONNX model
-    print('--> Loading model')
-    ret = rknn.load_onnx(model=ONNX_MODEL)
-    if ret != 0:
-        print('Load model failed!')
-        exit(ret)
-    print('done')
-
     # Build model
-    print('--> Building model')
-    ret = rknn.build(do_quantization=QUANTIZE_ON, dataset=DATASET)
+    print('--> Hybrid quantization step2')
+    ret = rknn.hybrid_quantization_step2(model_input='./plate_detect.model',
+                                         data_input='./plate_detect.data',
+                                         model_quantization_cfg='./plate_detect.quantization.cfg')
     if ret != 0:
-        print('Build model failed!')
+        print('hybrid_quantization_step2 failed!')
         exit(ret)
     print('done')
 
     # Accuracy analysis
     print('--> Accuracy analysis')
-    Ret = rknn.accuracy_analysis(inputs=[IMG_PATH],
-                                 output_dir="./snapshot/no_hybrid")
+    ret = rknn.accuracy_analysis(inputs=[IMG_PATH],
+                                 output_dir="./snapshot/hybrid")
     if ret != 0:
         print('Accuracy analysis failed!')
         exit(ret)
