@@ -19,7 +19,7 @@ DATASET = './dataset.txt'                       # 在选择量化的前提下，
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # detect_model = load_model("./weights/plate_detect.pt", device)  #初始化检测模型
 plate_rec_model = init_model(device, "./weights/plate_rec_color.pth", is_color = True)      #初始化识别模型
-onnx_path = "./weights/plate_detect.onnx"
+onnx_path = ONNX_MODEL
 
 
 if __name__ == '__main__':
@@ -32,9 +32,9 @@ if __name__ == '__main__':
     rknn.config(
         mean_values = [[114.57069762499403, 112.06498372297212, 112.0936524574251]],
         std_values = [[56.552368489533805, 59.74804638037939, 59.92431607351682]],
-        quantized_dtype = "asymmetric_quantized-8",
-        quantized_algorithm = 'normal',
-        quantized_method = 'channel',
+        # quantized_dtype = "asymmetric_quantized-8",
+        # quantized_algorithm = 'normal',
+        # quantized_method = 'channel',
         optimization_level = 2,
         target_platform = "rk3588")
     print('done')
@@ -55,22 +55,22 @@ if __name__ == '__main__':
         exit(ret)
     print('done')
 
-    # Accuracy analysis
-    print('--> Accuracy analysis')
-    Ret = rknn.accuracy_analysis(inputs=[IMG_PATH],
-                                 output_dir="./snapshot/no_hybrid")
-    if ret != 0:
-        print('Accuracy analysis failed!')
-        exit(ret)
-    print('done')
-
-    # # Export RKNN model
-    # print('--> Export rknn model')
-    # ret = rknn.export_rknn(RKNN_MODEL)
+    # # Accuracy analysis
+    # print('--> Accuracy analysis')
+    # Ret = rknn.accuracy_analysis(inputs=[IMG_PATH],
+    #                              output_dir="./snapshot/no_hybrid")
     # if ret != 0:
-    #     print('Export rknn model failed!')
+    #     print('Accuracy analysis failed!')
     #     exit(ret)
     # print('done')
+
+    # Export RKNN model
+    print('--> Export rknn model')
+    ret = rknn.export_rknn(RKNN_MODEL)
+    if ret != 0:
+        print('Export rknn model failed!')
+        exit(ret)
+    print('done')
 
     # Init runtime environment
     print('--> Init runtime environment')
@@ -93,12 +93,12 @@ if __name__ == '__main__':
     #                                            plate_rec_model,
     #                                            img_size = 640,
     #                                            is_color = True)
-    dict_list_onnx = detect_Recognition_plate_onnx(onnx_path,
-                                                img,
-                                                device,
-                                                plate_rec_model,
-                                                img_size = 640,
-                                                is_color = True) 
+    # dict_list_onnx = detect_Recognition_plate_onnx(onnx_path,
+    #                                             img,
+    #                                             device,
+    #                                             plate_rec_model,
+    #                                             img_size = 640,
+    #                                             is_color = True) 
     dict_list_rknn = detect_Recognition_plate_rknn(rknn,
                                                 img,
                                                 device,
@@ -120,10 +120,10 @@ if __name__ == '__main__':
     # ori_img_torch = draw_result(img_torch, dict_list_torch)
     # cv2.imwrite("./results/result_torch.jpg", ori_img_torch)
 
-    img_onnx = copy.deepcopy(img)
-    print("onnx output:    ", end="")
-    ori_img_onnx = draw_result(img_onnx, dict_list_onnx)
-    cv2.imwrite("./results/result_onnx.jpg", ori_img_onnx) 
+    # img_onnx = copy.deepcopy(img)
+    # print("onnx output:    ", end="")
+    # ori_img_onnx = draw_result(img_onnx, dict_list_onnx)
+    # cv2.imwrite("./results/result_onnx.jpg", ori_img_onnx) 
 
     img_rknn = copy.deepcopy(img)
     print("rknn output:    ", end="")

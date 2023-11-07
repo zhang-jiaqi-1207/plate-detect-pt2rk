@@ -214,7 +214,7 @@ def detect_Recognition_plate_onnx(model_path: str, orgimg, device, plate_rec_mod
     # pred = model(img)[0]
     sess = ort.InferenceSession(model_path)
     pred = sess.run(["output"], {"input" : img})[0]
-    pred = torch.from_numpy(pred).to("cuda")
+    pred = torch.from_numpy(pred).to(device)
 
     np.save("preds/onnx_pred.npy", pred.cpu().numpy())
 
@@ -278,7 +278,7 @@ def detect_Recognition_plate_rknn(model: RKNN, orgimg, device,plate_rec_model,im
     # pred = model(img)[0]
     pred = model.inference(inputs=[img],
                            data_format=["nhwc"])[0]
-    pred = torch.from_numpy(pred).to("cuda")
+    pred = torch.from_numpy(pred).to(device)
 
     np.save("preds/rknn_pred.npy", pred.cpu().numpy())
 
