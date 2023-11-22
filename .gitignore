@@ -6,6 +6,7 @@
 /snapshot
 
 # Ignore the followed files
+./dataset.txt
 ./checks/*.txt
 debug*.*
 plate_detect*.*

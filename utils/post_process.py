@@ -200,7 +200,7 @@ def detect_Recognition_plate_onnx(model_path: str, orgimg, device, plate_rec_mod
 
     img = letterbox(img0)[0]           #检测前处理，图片长宽变为32倍数，比如变为640X640
 
-    img = cv2.resize(img, (640, 512))
+    img = cv2.resize(img, (640, 640))
     # Convert
     img = img[:, :, ::-1].transpose(2, 0, 1).copy()  # BGR to RGB, 图片的BGR排列转为RGB,然后将图片的H,W,C排列变为C,H,W排列
 
@@ -263,14 +263,14 @@ def detect_Recognition_plate_rknn(model: RKNN, orgimg, device,plate_rec_model,im
 
     img = letterbox(img0, new_shape=imgsz)[0]           #检测前处理，图片长宽变为32倍数，比如变为640X640
 
-    img = cv2.resize(img, (640, 512))
+    img = cv2.resize(img, (640, 640))
     # Convert
     img = img[:, :, ::-1].copy()  # BGR to RGB, 图片的BGR排列转为RGB,然后图片为H,W,C排列
     # img = img[:, :, ::-1].transpose(2, 0, 1).copy()  # BGR to RGB, 图片的BGR排列转为RGB,然后将图片的H,W,C排列变为C,H,W排列
 
     # Run inference
     img = img.astype(np.float16)
-    # img /= 255.0  # [0 - 255] to [0.0 - 1.0]
+    img /= 255.0  # [0 - 255] to [0.0 - 1.0]
     if img.ndim == 3:
         img = np.expand_dims(img, axis=0)           # image shape : (1, 512, 640, 3)
 
